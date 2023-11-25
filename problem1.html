@@ -1,0 +1,134 @@
+<!-- HTML template -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Information Form</title>
+    <!-- Add any necessary stylesheets or link to external CSS files here -->
+</head>
+<body>
+    <form id="doctorForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="doctorId">Doctor ID:</label>
+        <input type="text" id="doctorId" required>
+
+        <label for="specialization">Specialization:</label>
+        <select id="specialization" required>
+            <!-- Add your specialization options here -->
+            <option value="ENT">ENT</option>
+            <option value="Cardiology">Cardiology</option>
+            <!-- Add more options as needed -->
+        </select>
+
+        <label for="experience">Experience (in years):</label>
+        <input type="number" id="experience" required>
+
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" required>
+
+        <label for="mobile">Mobile Number:</label>
+        <input type="tel" id="mobile" required>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <select id="filter">
+        <option value="all">All Specializations</option>
+        <!-- Add your specialization options here -->
+        <option value="ENT">ENT</option>
+        <option value="Cardiology">Cardiology</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Doctor ID</th>
+                <th>Specialization</th>
+                <th>Experience (Years)</th>
+                <th>Email Address</th>
+                <th>Mobile Number</th>
+                <th>Role</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="doctorTableBody">
+            <!-- Table body will be populated dynamically -->
+        </tbody>
+    </table>
+
+    <script src="your-script-file.js"></script>
+</body>
+</html>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('doctorForm');
+    const tableBody = document.getElementById('doctorTableBody');
+    const filterSelect = document.getElementById('filter');
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const doctorId = document.getElementById('doctorId').value;
+        const specialization = document.getElementById('specialization').value;
+        const experience = parseInt(document.getElementById('experience').value);
+        const email = document.getElementById('email').value;
+        const mobile = document.getElementById('mobile').value;
+
+        // Determine role based on experience
+        let role;
+        if (experience > 5) {
+            role = 'Senior';
+        } else if (experience >= 2 && experience <= 5) {
+            role = 'Junior';
+        } else {
+            role = 'Trainee';
+        }
+
+        // Create a new row for the table
+        const newRow = tableBody.insertRow();
+
+        // Populate the row with data
+        newRow.innerHTML = `
+            <td>${name}</td>
+            <td>${doctorId}</td>
+            <td>${specialization}</td>
+            <td>${experience}</td>
+            <td>${email}</td>
+            <td>${mobile}</td>
+            <td>${role}</td>
+            <td><button class="deleteButton">Delete</button></td>
+        `;
+
+        // Attach event listener to the delete button
+        const deleteButton = newRow.querySelector('.deleteButton');
+        deleteButton.addEventListener('click', function () {
+            tableBody.removeChild(newRow);
+        });
+
+        // Reset the form
+        form.reset();
+    });
+
+    filterSelect.addEventListener('change', function () {
+        const selectedSpecialization = filterSelect.value;
+
+        // Show or hide rows based on the selected specialization
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            const specializationCell = row.cells[2].textContent;
+            if (selectedSpecialization === 'all' || specializationCell === selectedSpecialization) {
+                row.style.display = 'table-row';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+
+</script>
